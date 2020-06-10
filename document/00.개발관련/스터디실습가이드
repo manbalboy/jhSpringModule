@@ -1,0 +1,23 @@
+개발 스터디 실습 가이드
+/SpringModule/src/main/java/com/demo1/biz/sample --> 단순 참고용
+
+1 /SpringModule/src/main/java/com/demo1/biz/생성 -- > 생성 설명 : svn 계정 (ex) /SpringModule/src/main/java/com/demo1/biz/csg)
+1.1  /SpringModule/src/main/java/com/demo1/biz/csg 하위 폴더 생성
+2.1 contorller
+2.2 dao
+2.3 service
+2.4 sample 폴더 참고 하여 네이밍 제작
+2.5 프로 그램 제작
+
+2 타일즈 관련 참고
+/SpringModule/document/00.개발관련/타일즈관련.txt
+
+2.1 뷰는 타일즈뷰와 jstl뷰 , json뷰
+스프링 뷰 전략(뷰선택 전략)
+뷰 설명
+타일즈뷰 : 타일즈 데피니션에 명시된 레이아웃으로 출력물을 생성할수 있다.
+jstl뷰 : 화면제작 파일만 응답으로 출력을 보내주기 위해 사용됨
+타일즈뷰 jstl뷰 선택 방법 : 뷰네이밍 규칙
+타일즈뷰 명명법 :  demo1.sample.sample1
+jstl뷰 명명법 : demo1/sample/sample2
+json뷰 명명법 : 서블릿경로.json

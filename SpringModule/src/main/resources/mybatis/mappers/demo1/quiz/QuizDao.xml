@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.quiz.dao.QuizDao">
+
+    <select id="selectTbQuizList" resultType="map" parameterType="map">
+        /* com.demo1.biz.quiz.dao.QuizDao.selectTbQuizList */
+        SELECT TQ.QUIZ_NUMBER          /*퀴즈번호*/
+             , TQ.WRITER_ID            /*작성자ID*/
+             , TQ.QUIZ_CONTENTS        /*퀴즈내용*/
+             , TQ.REGISTRATION_DATE    /*등록일시*/
+             , TQ.REGISTER_ID          /*등록자ID*/
+             , TQ.UPDATE_DATE          /*수정일시*/
+             , TQ.UPDATE_USER_ID       /*수정자ID*/
+             , TUI.USER_NAME
+          FROM TB_QUIZ TQ
+             , TB_USER_INFORMATION TUI
+         WHERE TQ.WRITER_ID = TUI.USER_ID
+    </select>
+
+    <insert id="insertTbQuiz" parameterType="map">
+    /* com.demo1.biz.quiz.dao.QuizDao.insertTbQuiz */
+    INSERT INTO
+   TB_QUIZ(QUIZ_NUMBER          /*퀴즈번호*/
+         , WRITER_ID            /*작성자ID*/
+         , QUIZ_CONTENTS        /*퀴즈내용*/
+         , REGISTRATION_DATE    /*등록일시*/
+         , REGISTER_ID          /*등록자ID*/
+         , UPDATE_DATE          /*수정일시*/
+         , UPDATE_USER_ID       /*수정자ID*/
+          )
+    VALUES(
+           SEQ_QUIZ_NUMBER.NEXTVAL
+         , #{WRITER_ID}
+         , #{quizContents}
+         , SYSDATE
+         , #{REGISTER_ID}
+         , SYSDATE
+         , #{UPDATE_USER_ID}
+          )
+    </insert>
+
+
+
+</mapper>

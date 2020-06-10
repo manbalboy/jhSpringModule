@@ -1,0 +1,16 @@
+#DATA 이동 1셋  클라이언트-> 컨트롤러-> 서비스 -> 서비스임플 -> DAO -> 맵퍼
+
+요약 : 이사 및 추가로 따는 작업은 5가지  java,매퍼,WAS 정적자원,tiles 데피니션,JSP 
+이사 단위는 demo1 포함 하위 패키지 (demo1은 계속 증가 하는 학습용 작업 단위 경계)
+
+java 
+/SpringModule/src/main/java/com/demo1 --> demo1포함 하위 폴더 싹 복사 또는 demo1을 기준으로 형제 노드에 추가 생성
+매퍼
+/SpringModule/src/main/resources/mybatis/mappers/demo1 --> demo1포함 하위 폴더 싹 복사 또는 demo1을 기준으로 형제 노드에 추가 생성
+WAS 정적 자원
+/SpringModule/src/main/webapp/static/demo1 --> demo1포함 하위 폴더 싹 복사 또는 demo1을 기준으로 형제 노드에 추가 생성
+tiles 데피니션
+타일즈는 타일즈 명명 규칙에 따른다.
+/SpringModule/src/main/webapp/WEB-INF/tiles-definitions/demo1 --> demo1포함 하위 폴더 싹 복사 또는 demo1을 기준으로 형제 노드에 추가 생성
+JSP
+/SpringModule/src/main/webapp/WEB-INF/view/demo1 --> demo1포함 하위 폴더 싹 복사 또는 demo1을 기준으로 형제 노드에 추가 생성

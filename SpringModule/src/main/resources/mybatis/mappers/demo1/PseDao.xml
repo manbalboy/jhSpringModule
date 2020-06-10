@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.demo1.biz.pse.dao.PseDao">
+    <select id="selectPSE_DAILYDIARY" resultType="map" parameterType="map">
+    /* com.demo1.biz.dao.pse.PseDao.selectPSE_DAILYDIARY */
+    SELECT
+        DIARY_SEQ
+        , USER_ID
+        , DIARY_TITLE
+        , DBMS_LOB.SUBSTR(DIARY_CONTENTS, 3000, 1) AS DIARY_CONTENTS
+        , REGIST_DATE
+        , USE_YN
+    FROM PSE_DAILYDIARY
+    <where>
+        USE_YN = 'Y'
+        <if test="diarySeq != null and diarySeq != ''">
+            AND DIARY_SEQ = ${diarySeq}
+        </if>
+    </where>
+    </select>
+</mapper>

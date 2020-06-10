@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+<!-- 	  <setting name="cacheEnabled" value="true"/> -->
+<!-- 	  <setting name="defaultExecutorType" value="REUSE" /> -->
+<!-- 	  <setting name="useGeneratedKeys" value="false"/> -->
+
+        <setting name="cacheEnabled" value="false" />
+        <setting name="lazyLoadingEnabled" value="false" />
+        <setting name="multipleResultSetsEnabled" value="false" /><!-- 하나의 statement에서 다수 ResultSet 허락여부 -->
+        <setting name="useColumnLabel" value="true" />
+        <setting name="useGeneratedKeys" value="false" />
+        <setting name="defaultExecutorType" value="SIMPLE" />
+        <setting name="defaultStatementTimeout" value="60000" />
+        <setting name="safeRowBoundsEnabled" value="false" />
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+        <setting name="localCacheScope" value="SESSION" />
+        <setting name="jdbcTypeForNull" value="VARCHAR" />
+        <setting name="callSettersOnNulls" value="true" /><!-- Map 사용할 때 리턴값이 null이어도 컬럼 누락되지 않도록 -->
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+
+    </settings>
+
+<!-- 	<typeAliases> -->
+<!--         <typeAlias  alias="commMap" type="marketingMgr.cmmn.util.CommMap"/> -->
+<!--     </typeAliases> -->
+
+</configuration>

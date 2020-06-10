@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.csg.dao.CsgDao">
+
+    <sql id="pagingOffset">
+        <if test="not @org.springframework.util.StringUtils@isEmpty(#{offset})">
+            offset #{begin} rows fetch first #{offset} rows only
+        </if>
+    </sql>
+
+    <!-- 페이징 처리 샘플
+    order 값은 1,2,3 ... N
+    paging처리는 스냅펫 등록 하세요 붙여넣고 사이에 쿼리 작성
+    <include refid="pagingOffset"/>
+
+    -->
+
+    <select id="selectDemo1CsgGrowupTodoList" resultType="map" parameterType="map">
+        /* com.demo1.biz.dao.csg.CsgDao.selectDemo1CsgGrowupTodo */
+            SELECT
+                COUNT(1) OVER() TOTAL_CNT
+                , A.TODO_ID
+                ,A.TODO_TITLE
+                ,A.TODO_OWNER
+                ,A.REGISTRATION_DATE
+                ,A.REGISTER_ID
+            FROM DEMO1_CSG_GROWUP_TODO A
+                <if test="not @org.springframework.util.StringUtils@isEmpty(#{offset})">
+                ORDER BY
+                <choose>
+                    <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "1"'>TODO_ID DESC</when>
+                    <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "2"'>TODO_OWNER ASC</when>
+                    <otherwise>TODO_ID DESC</otherwise>
+                </choose>
+            </if>
+            <include refid="pagingOffset"/>
+    </select>
+
+</mapper>

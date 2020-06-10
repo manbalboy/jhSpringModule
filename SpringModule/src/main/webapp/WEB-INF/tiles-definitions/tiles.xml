@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+<!-- Base Definition -->
+<definition name="base-definition" template="/WEB-INF/view/demo1/tiles/layouts/defaultLayout.jsp">
+    <put-attribute name="title" value="" />
+    <put-attribute name="header" value="/WEB-INF/view/demo1/tiles/template/defaultHeader.jsp" />
+    <put-attribute name="menu" value="/WEB-INF/view/demo1/tiles/template/defaultMenu.jsp" />
+    <put-attribute name="footer" value="/WEB-INF/view/demo1/tiles/template/defaultFooter.jsp" />
+</definition>
+
+
+<!-- Contact-us Page -->
+<definition name="pages/*" extends="base-definition">
+    <put-attribute name="body" value="/WEB-INF/view/demo1/pages/{1}.jsp" />
+</definition>
+
+<definition name="demo1.sample.*" extends="base-definition">
+    <put-attribute name="body" value="/WEB-INF/view/demo1/sample/{1}.jsp" />
+</definition>
+
+<definition name="demo1.csg.*" extends="base-definition">
+    <put-attribute name="body" value="/WEB-INF/view/demo1/biz/csg/{1}.jsp" />
+</definition>
+
+<!-- <definition name="demo1.pse.*" extends="base-definition"> -->
+<!--     <put-attribute name="body" value="/WEB-INF/view/demo1/biz/pse/{1}.jsp" /> -->
+<!-- </definition> -->
+
+<definition name="demo1.*.*.*" extends="base-definition">
+    <put-attribute name="body" value="/WEB-INF/view/demo1/{1}/{2}/{3}.jsp" />
+</definition>
+
+
+</tiles-definitions>

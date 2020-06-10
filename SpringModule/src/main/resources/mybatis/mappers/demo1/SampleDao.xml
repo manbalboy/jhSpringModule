@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.sample.dao.SampleDao">
+
+    <sql id="pagingStart">
+        <if test="not @org.springframework.util.StringUtils@isEmpty(#{begin})">
+        SELECT P.* FROM (
+        </if>
+    </sql>
+    <sql id="pagingEnd">
+        <if test="not @org.springframework.util.StringUtils@isEmpty(#{begin})">
+        ) P
+        WHERE 1=1
+        AND P.RNUM BETWEEN #{begin} AND #{end}
+        </if>
+    </sql>
+
+    <sql id="pagingOffset">
+        <if test="not @org.springframework.util.StringUtils@isEmpty(#{offset})">
+            ORDER BY
+            <choose>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "1"'>COLUMN1 DESC</when>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "2"'>COLUMN2 ASC</when>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "3"'>COLUMN1 DESC, COLUMN2 ASC</when>
+                <otherwise>COLUMN1 DESC</otherwise>
+            </choose>
+            offset #{begin} rows fetch first #{offset} rows only
+        </if>
+    </sql>
+
+
+
+    <select id="selectTB_SAMPLE" resultType="map" parameterType="map">
+        /* com.demo1.biz.dao.sample.SampleDao.selectTB_SAMPLE */
+        SELECT 1 FROM DUAL
+        UNION ALL
+        SELECT 2 FROM DUAL
+        UNION ALL
+        SELECT 3 FROM DUAL
+        UNION ALL
+        SELECT 4 FROM DUAL
+    </select>
+    <!-- 페이징 처리 샘플
+    order 값은 1,2,3 ... N
+    paging처리는 스냅펫 등록 하세요 붙여넣고 사이에 쿼리 작성
+    <include refid="pagingStart"/>
+    <include refid="pagingEnd"/>
+
+    <include refid="pagingOffset"/>
+
+    -->
+    <select id="selectTB_SAMPLE2" resultType="map" parameterType="map">
+        /* com.demo1.biz.dao.sample.SampleDao.selectTB_SAMPLE2 */
+        <include refid="pagingStart"/>
+            <if test="@org.springframework.util.StringUtils@isEmpty(#{sortOrder})"></if>
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY
+                <choose>
+                    <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "1"'>COLUMN1 DESC</when>
+                    <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "2"'>COLUMN2 ASC</when>
+                    <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "3"'>COLUMN1 DESC, COLUMN2 ASC</when>
+                    <otherwise>COLUMN1 DESC</otherwise>
+                </choose>
+                ) AS RNUM
+                ,COUNT(1) OVER() TOTAL_CNT
+                , A.COLUMN1
+                ,A.COLUMN2
+                ,A.COLUMN3
+                ,A.COLUMN4
+                ,TEST1
+            FROM TEST A
+        <include refid="pagingEnd"/>
+
+    </select>
+
+    <select id="selectTB_SAMPLE3" resultType="map" parameterType="map">
+        /* com.demo1.biz.dao.sample.SampleDao.selectTB_SAMPLE3 */
+            SELECT
+            COUNT(1) OVER() TOTAL_CNT
+            , A.COLUMN1
+            ,A.COLUMN2
+            ,A.COLUMN3
+            ,A.COLUMN4
+            ,A.TEST1
+                FROM TEST A
+        <include refid="pagingOffset"/>
+
+    </select>
+
+
+    <!-- 샘플용입니다. 키컬럼 참고용이지 거시기는 아닙니다! -->
+    <insert id="insertTEST" parameterType="map" >
+    /* com.demo1.biz.dao.sample.SampleDao.insertTEST */
+    <selectKey resultType="integer" order="BEFORE" keyProperty="key" >
+    SELECT TEST_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO TEST(
+                    COLUMN1
+                    ,COLUMN2
+                    ,COLUMN3
+                    ,COLUMN4
+                    ,TEST1
+                    ) VALUES(
+                     #{column1} || #{key}
+                    ,#{column2}
+                    ,#{column3}
+                    ,#{column4}
+                    ,#{test1}
+                    )
+    </insert>
+
+    <insert id="insertTEST2" parameterType="map">
+    /* com.demo1.biz.dao.sample.SampleDao.insertTEST2 */
+    INSERT INTO TEST(
+                    COLUMN1
+                    ,COLUMN2
+                    ,COLUMN3
+                    ,COLUMN4
+                    ,TEST1
+                    ) VALUES(
+                     #{obj.column1} || TEST_SEQ.NEXTVAL
+                    ,#{obj.column2}
+                    ,#{obj2.column3}
+                    ,#{obj2.column4}
+                    ,#{obj2.test1}
+                    )
+    </insert>
+
+
+</mapper>

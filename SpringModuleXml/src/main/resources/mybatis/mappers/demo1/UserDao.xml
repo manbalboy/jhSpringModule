@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.user.dao.UserDao">
+
+    <sql id="pagingOffset">
+        <if test="not @org.springframework.util.StringUtils@isEmpty(#{offset})">
+            ORDER BY
+            <choose>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "1"'>COLUMN1 DESC</when>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "2"'>COLUMN2 ASC</when>
+                <when test='not @org.springframework.util.StringUtils@isEmpty(#{sortOrder}) and #{sortOrder} eq "3"'>COLUMN1 DESC, COLUMN2 ASC</when>
+                <otherwise>COLUMN1 DESC</otherwise>
+            </choose>
+            offset #{begin} rows fetch first #{offset} rows only
+        </if>
+    </sql>
+
+    <select id="selectTbUserLogin" resultType="map" parameterType="map">
+        /* com.demo1.biz.user.dao.UserDao.selectTbUserLogin */
+        SELECT USER_ID              /*사용자ID*/
+             , USER_PASSWORD        /*사용자암호*/
+             , USER_AUTHORITY       /*사용자권한*/
+             , REGISTRATION_DATE    /*등록일시*/
+             , REGISTER_ID          /*등록자ID*/
+             , UPDATE_DATE          /*수정일시*/
+             , UPDATE_USER_ID       /*수정자ID*/
+          FROM TB_USER_LOGIN
+         WHERE USER_ID = #{userId}
+
+<!--         <include refid="pagingOffset"/> -->
+    </select>
+</mapper>
