@@ -27,7 +27,6 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 import com.config.interceptor.AnotherInterceptor;
 import com.config.interceptor.GreetingInterceptor;
 import com.config.resolvers.DownloadView;
-import com.config.resolvers.ExcelViewResolver;
 import com.config.resolvers.Jaxb2MarshallingXmlViewResolver;
 import com.config.resolvers.JsonViewResolver;
 import com.config.resolvers.PdfViewResolver;
@@ -105,7 +104,7 @@ public class AppConfig implements WebMvcConfigurer  {
         resolvers.add(jspViewResolver());
         resolvers.add(jsonViewResolver());
         resolvers.add(pdfViewResolver());
-        resolvers.add(excelViewResolver());
+//        resolvers.add(excelViewResolver());
         resolvers.add(jaxb2MarshallingXmlViewResolver());
 
         resolver.setViewResolvers(resolvers);
@@ -155,10 +154,10 @@ public class AppConfig implements WebMvcConfigurer  {
     /**
      * TODO : 엑셀 구현 안했음. 테스트시 실패 했음 POI 연구해야함
      */
-    @Bean
-    public ViewResolver excelViewResolver() {
-        return new ExcelViewResolver();
-    }
+//    @Bean
+//    public ViewResolver excelViewResolver() {
+//        return new ExcelViewResolver();
+//    }
 
     @Bean
     public View downloadView() {

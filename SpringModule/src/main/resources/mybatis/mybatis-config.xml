@@ -22,8 +22,8 @@
 
     </settings>
 
-<!-- 	<typeAliases> -->
-<!--         <typeAlias  alias="commMap" type="marketingMgr.cmmn.util.CommMap"/> -->
-<!--     </typeAliases> -->
+    <typeAliases>
+        <typeAlias  alias="camelMap" type="com.util.CamelMap"/>
+    </typeAliases>
 
 </configuration>

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.demo1.biz.quiz.dao.QuizDao">
 
-    <select id="selectTbQuizList" resultType="map" parameterType="map">
+    <select id="selectTbQuizList" resultType="camelMap" parameterType="map">
         /* com.demo1.biz.quiz.dao.QuizDao.selectTbQuizList */
         SELECT TQ.QUIZ_NUMBER          /*퀴즈번호*/
              , TQ.WRITER_ID            /*작성자ID*/

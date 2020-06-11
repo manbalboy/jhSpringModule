@@ -36,9 +36,9 @@
                     <tbody>
                         <c:forEach items="${list}" var="row">
                             <tr>
-                                <td>${row.USER_NAME}</td>
-                                <td>${row.QUIZ_CONTENTS}</td>
-                                <td>${row.REGISTRATION_DATE}</td>
+                                <td>${row.userName}</td>
+                                <td>${row.quizContents}</td>
+                                <td>${row.registrationDate}</td>
                             </tr>
                         </c:forEach>
                     </tbody>
