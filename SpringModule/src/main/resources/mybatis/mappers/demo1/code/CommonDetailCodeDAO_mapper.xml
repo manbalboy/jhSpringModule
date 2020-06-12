@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.code.dao.CommonDetailCodeDAO">
+
+    <select id="selectCommonDetailCodeList" resultType="com.demo1.biz.code.vo.CommonDetailCodeVO" parameterType="com.demo1.biz.code.vo.CommonDetailCodeVO">
+        /* MemberManagementDAO_Mapper.selectMemberList */
+        SELECT CODE_ID             /*코드ID*/
+             , CODE                /*코드*/
+             , CODE_NAME           /*코드명*/
+             , CODE_DESCRIPTION    /*코드설명*/
+             , USE_YN              /*사용여부*/
+             , REGISTRATION_DATE   /*등록일시*/
+             , REGISTER_ID         /*등록자ID*/
+             , UPDATE_DATE         /*수정일시*/
+             , UPDATE_USER_ID      /*수정자ID*/
+             , SORT                /*순서*/
+          FROM TB_COMMON_DETAIL_CODE
+         WHERE 1=1
+         <if test="codeId != null and codeId != ''">
+           AND CODE_ID  = #{codeId}
+         </if>
+         <if test="useYn != null and useYn != ''">
+           AND USE_YN  = #{useYn}
+         </if>
+         <if test="code != null and code != ''">
+           AND CODE = #{code}
+         </if>
+    </select>
+
+
+
+
+
+
+
+
+
+</mapper>

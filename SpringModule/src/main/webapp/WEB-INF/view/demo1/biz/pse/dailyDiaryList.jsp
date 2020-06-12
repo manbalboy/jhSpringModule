@@ -26,9 +26,12 @@ function fn_moveDailyDiaryView(seq){
     form.submit();
 }
 </script>
+<div align="right" style="margin-bottom:15px;">
+    <button class="btn btn-warning" onclick="location.href='./dailyDiaryWrite'">일기 작성!</button>
+</div>
 <div id="list">
     <table class="table">
-        <thead>
+        <thead class="thead-dark">
             <tr>
               <th scope="col">No</th>
               <th scope="col">ID</th>

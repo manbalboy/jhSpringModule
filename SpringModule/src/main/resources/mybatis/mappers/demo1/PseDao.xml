@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.demo1.biz.pse.dao.PseDao">
+
     <select id="selectPSE_DAILYDIARY" resultType="map" parameterType="map">
     /* com.demo1.biz.dao.pse.PseDao.selectPSE_DAILYDIARY */
     SELECT
@@ -14,8 +15,50 @@
     <where>
         USE_YN = 'Y'
         <if test="diarySeq != null and diarySeq != ''">
-            AND DIARY_SEQ = ${diarySeq}
+            AND DIARY_SEQ = #{diarySeq}
         </if>
     </where>
+    ORDER BY DIARY_SEQ DESC
     </select>
+
+    <insert id="insertPSE_DAILYDIARY" parameterType="map">
+    /* com.demo1.biz.dao.pse.PseDao.insertPSE_DAILYDIARY */
+    INSERT INTO PSE_DAILYDIARY (
+        DIARY_SEQ
+        , USER_ID
+        , DIARY_TITLE
+        , DIARY_CONTENTS
+    )
+    VALUES (
+        SEQ_PSE_DAILYDIARY.NEXTVAL
+        , #{userId}
+        , #{diaryTitle}
+        , #{diaryContents}
+    )
+    </insert>
+
+    <update id="updatePSE_DAILYDIARY" parameterType="map">
+    /* com.demo1.biz.dao.pse.PseDao.updatePSE_DAILYDIARY */
+    UPDATE
+        PSE_DAILYDIARY
+    SET
+        DIARY_TITLE = #{diaryTitle}
+        , DIARY_CONTENTS = #{diaryContents}
+        , REGIST_DATE = SYSDATE
+        , UPDATE_DATE = SYSDATE
+    WHERE 1=1
+    AND	USER_ID = #{userId}
+    AND DIARY_SEQ = #{diarySeq}
+    </update>
+
+    <update id="deletePSE_DAILYDIARY" parameterType="map">
+    /* com.demo1.biz.dao.pse.PseDao.deletePSE_DAILYDIARY */
+    UPDATE
+        PSE_DAILYDIARY
+    SET
+        USE_YN = 'N'
+    WHERE 1=1
+    AND	USER_ID = #{userId}
+    AND DIARY_SEQ = #{diarySeq}
+    </update>
 </mapper>

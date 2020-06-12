@@ -1,14 +1,15 @@
 package com.demo1.biz.user.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UserController {
     @GetMapping("/login")
-    public String login()throws Exception{
-        System.out.println("test>>>>>>>>>>>>>>>");
+    public String login(HttpServletResponse res)throws Exception{
+        System.out.println("test>>>>>>>>>>>>>>>" + res);
         return "demo1/common/login";
     }
     @GetMapping("/logout")

@@ -25,6 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     public SecurityExpressionHandler expressionHandler() {
+
+        System.out.println(">>>>>>>>>>>>>>>");
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
 
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -61,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.exceptionHandling()
         .accessDeniedHandler((request, response, accessDeniedException) -> {
+
             UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = principal.getUsername();
             System.out.println(username + " is denied to access " + request.getRequestURI());

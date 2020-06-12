@@ -36,7 +36,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">테스트영역</h6>
-            <a class="collapse-item" href="${pageContext.request.contextPath}/JhTestPage">정훈의 TESTPAGE1</a>
+            <a class="collapse-item" href="${pageContext.request.contextPath}/member/management/viewMemberList">일반회원관리목록</a>
             <a class="collapse-item" href="${pageContext.request.contextPath}/viewTestFile">TESTFILEUPLOAD</a>
             <a class="collapse-item" href="${pageContext.request.contextPath}/products">Cards</a>
             <a class="collapse-item" href="${pageContext.request.contextPath}/sourceMaker">소스Maker</a>
@@ -157,3 +157,13 @@
       </div>
 
     </ul>
+
+
+    <script>
+     function fn_changeContent (goUrl) {
+
+         console.log("dd");
+         $('#site-content').children().remove().load("/home1");
+     }
+
+    </script>

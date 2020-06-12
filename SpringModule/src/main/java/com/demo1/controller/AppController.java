@@ -14,40 +14,40 @@ import com.demo1.model.Pizza;
 @Controller
 public class AppController {
 
-	@RequestMapping(value="/pizzavalley/{pizzaName}", method = RequestMethod.GET)
-	public String getPizza(@PathVariable String pizzaName,Model model) {
- 
-		Pizza pizza = new Pizza(pizzaName);
-		model.addAttribute("pizza", pizza);
-		
-		model.addAttribute("test", "tttt");
- 
-		return "pizza";
- 
-	}
-	
+    @RequestMapping(value="/pizzavalley/{pizzaName}", method = RequestMethod.GET)
+    public String getPizza(@PathVariable String pizzaName,Model model) {
 
-	@RequestMapping(value = { "/context"}, method = RequestMethod.GET)
-	public String homePage(ModelMap model) {
-		return "pages/home";
-	}
+        Pizza pizza = new Pizza(pizzaName);
+        model.addAttribute("pizza", pizza);
 
-	@RequestMapping(value = { "/products"}, method = RequestMethod.GET)
-	public String productsPage(ModelMap model) {
-		return "pages/products";
-	}
+        model.addAttribute("test", "tttt");
 
-	@RequestMapping(value = { "/contactus"}, method = RequestMethod.GET)
-	public String contactUsPage(ModelMap model) {
-		return "pages/contactus";
-	}
-	@RequestMapping(value = { "/main"}, method = RequestMethod.GET)
-	public String main(ModelMap model) {
-		return "pages/main";
-	}
-	@RequestMapping(value = { "/JhTestPage"}, method = RequestMethod.GET)
-	public String JhTestPage(ModelMap model) {
-		return "pages/JhTestPage";
-	}
-	
+        return "pizza";
+
+    }
+
+
+    @RequestMapping(value = { "/context"}, method = RequestMethod.GET)
+    public String homePage(ModelMap model) {
+        return "pages/home";
+    }
+
+    @RequestMapping(value = { "/products"}, method = RequestMethod.GET)
+    public String productsPage() {
+        return "pages/products";
+    }
+
+    @RequestMapping(value = { "/contactus"}, method = RequestMethod.GET)
+    public String contactUsPage(ModelMap model) {
+        return "pages/contactus";
+    }
+    @RequestMapping(value = { "/main"}, method = RequestMethod.GET)
+    public String main(ModelMap model) {
+        return "pages/main";
+    }
+    @RequestMapping(value = { "/JhTestPage"}, method = RequestMethod.GET)
+    public String JhTestPage(ModelMap model) {
+        return "pages/JhTestPage";
+    }
+
 }

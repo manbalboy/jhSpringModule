@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.demo1.biz.member.dao.MemberManagementDAO">
+
+    <select id="selectMemberList" resultType="com.demo1.biz.member.vo.MemberManagementVO" parameterType="com.demo1.biz.member.vo.MemberManagementVO">
+        /* MemberManagementDAO_Mapper.selectMemberList */
+        SELECT MEMBER_ID                  /*회원ID*/
+             , PASSWORD                   /*비밀번호*/
+             , PASSWORD_HINT_CONTENTS     /*비밀번호힌트내용*/
+             , PASSWORD_CNSR_CONTENTS     /*비밀번호정답내용*/
+             , IHIDNUM                    /*주민등록번호*/
+             , MEMBER_NAME                /*회원이름*/
+             , ZIP_CODE                   /*우편번호*/
+             , ADDRESS                    /*주소*/
+             , MEMBER_STATUS_CODE         /*회원상태코드*/
+             , DETAIL_ADDRESS             /*상세주소*/
+             , MOBILE_PHONE_NUMBER        /*휴대전화번호*/
+             , PHONE_NUMBER               /*전화번호*/
+             , GROUP_ID                   /*그룹ID*/
+             , MEMBER_EMAIL_ADDRESS       /*회원이메일주소*/
+             , SUBSCRIBE_DATE             /*가입일자*/
+             , SEXDSTN_CODE               /*성별코드*/
+             , LOCK_YN                    /*잠금여부*/
+             , LOCK_COUNT                 /*잠금횟수*/
+             , LOCK_LAST_DATE             /*잠금최종일시*/
+             , REGISTRATION_DATE          /*등록일시*/
+             , REGISTER_ID                /*등록자ID*/
+             , UPDATE_DATE                /*수정일시*/
+             , UPDATE_USER_ID             /*수정자ID*/
+          FROM TB_GENERAL_MEMBER
+         WHERE 1=1
+        <if test='memberStatusCode != null and  memberStatusCode != ""'>
+           AND MEMBER_STATUS_CODE LIKE  #{memberStatusCode}
+        </if>
+        <if test="not @org.springframework.util.StringUtils@isEmpty(searchKeyword)">
+            <if test="searchCondition == 'memberId'">AND
+                 MEMBER_ID LIKE #{searchKeyword}
+            </if>
+            <if test="searchCondition == 'memberName'">AND
+                 MEMBER_NAME LIKE '%' ||#{searchKeyword}|| '%'
+            </if>
+        </if>
+    </select>
+
+
+    <delete id="deleteMember" parameterType="String">
+    /* MemberManagementDAO_Mapper.deleteMember */
+    DELETE
+      FROM TB_GENERAL_MEMBER
+     WHERE MEMBER_ID = #{memberId}
+
+
+
+
+    </delete>
+
+
+
+
+
+
+</mapper>

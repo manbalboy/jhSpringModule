@@ -3,16 +3,16 @@
 
    <!-- Page Heading -->
    <h1 class="h3 mb-4 text-gray-800">productsPage</h1>
+    ${userId}
 
  </div>
- 
- 
+
+
  <script type="text/javascript">
    $(document).ready(function () {
-	   console.log("정훈의 테스트11 ");
+       console.log("정훈의 테스트11 ");
    });
 
 
 
 </script>
- 
