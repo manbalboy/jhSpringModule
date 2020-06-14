@@ -145,3 +145,69 @@ hiyogils@gmail.com
          event.target.value = calByte.cutByteLength( event.target.value, event.target.dataset.maxbyte )
      };
  });
+
+
+
+ let jhUtil = {};
+
+ // Ajax 감싸줌 .  기본값 셋팅    필수는 url!
+ jhUtil.callAjax = function (oOption) {
+     if(jhUtil.isEmpty(oOption.async)) { oOption.async = true; } // 동기 유무
+     if(jhUtil.isEmpty(oOption.cache)) { oOption.cache = false; } // 브라우저에 의해 요청되는 페이지를 캐시 여부
+     if(jhUtil.isEmpty(oOption.enctype)) { oOption.enctype = ""; }
+     if(jhUtil.isEmpty(oOption.callBackFunction)) { oOption.callBackFunction = jhUtil.commCallBak }
+
+
+/*   processData
+ *   ajax 통신을 통해 데이터를 전송할때, 기본적으로 key와 value값을 Query String으로 변환해서 보낸다.
+ *   데이터 값에 따라 (key=value&key=value) 또는 (key:value, key:value) 이런 식으로 보내게되는데,
+ *   이때 이 processData가 false로 되어 있으면 Query String으로 설정하지 않는다.
+ *   processData는 파일 전송 시에 사용한다고 한다
+ */
+     if(jhUtil.isEmpty(oOption.processData)) { oOption.processData = true; }
+   //서버에 데이터를 보낼 때 사용 content - type 헤더의 값
+     if(jhUtil.isEmpty(oOption.contentType)) { oOption.contentType = "application/x-www-form-urlencoded;charset=UTF-8"; }
+     if(oOption.data != undefined && oOption.contentType == "application/json;") {
+         oOption.data = JSON.stringify(oOption.data);
+     }
+
+     $.ajax({
+        type: oOption.type || "POST",
+        url: oOption.url,
+        data : oOption.data || "",
+        async: oOption.async,
+        cache: oOption.cache,
+        dataType: oOption.dataType || "json",
+        processData: oOption.processData,
+        contentType: oOption.contentType,
+        enctype: oOption.enctype,
+
+        timeout: oOption.timeout || 30000, // 30초
+        error: function(XMLHttpRequest, textStatus, errorThrown) { // 에러
+        },
+        beforeSend: function(xhr, option){ // http 요청 전에 발생하는 이벤트
+        },
+        complete: function () { // 요청완료시 성공, 실패, 에러등 모든상황이 종료된 이후의 함수 호출
+        },
+        success: function(data , mag , info){ // 성공
+            oOption.callBackFunction(data , oOption.sId);
+        }
+     })
+ };
+
+ //Ajax 콜백 함수 정의 해주지 않았을때 디폴트 콜백
+ jhUtil.commCallBak = function (data , sId) {
+    alert("완료되었습니다.");
+ };
+
+
+ // 빈값 체크
+ jhUtil.isEmpty =  function (value) {
+     if (value === null) { return true }
+     if (typeof value === 'undefined') { return true }
+     if (typeof value === 'string' && value === '') { return true }
+     if (Array.isArray(value) && value.length < 1) { return true }
+     if (typeof value === 'object' && value.constructor.name === 'Object' && Object.keys(value).length < 1 && Object.getOwnPropertyNames(value) < 1) { return true }
+     if (typeof value === 'object' && value.constructor.name === 'String' && Object.keys(value).length < 1) { return true } // new String()
+     return false;
+ };

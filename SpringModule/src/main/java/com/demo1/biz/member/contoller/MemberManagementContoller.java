@@ -1,15 +1,22 @@
 package com.demo1.biz.member.contoller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.demo1.biz.code.service.CommonDetailCodeService;
 import com.demo1.biz.code.vo.CommonDetailCodeVO;
@@ -72,6 +79,40 @@ public class MemberManagementContoller {
 
     /**
      * <pre>
+     * 1. 메소드명 : viewMemberList
+     * 2. 작성일 : 2020. 6. 13. 오전 12:51:50
+     * 3. 작성자 : 정훈
+     * 4. 설명 : 멤버리스트 조회
+     * </pre>
+     * @param memberManagementVO
+     * @param bindingResult
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/viewMemberList2")
+    @ResponseBody
+    public Map viewMemberList2(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+        Map map = new HashMap();
+        map.put("test", "test");
+
+        List list = new ArrayList();
+
+
+        list.add("test");
+        list.add("test1");
+        list.add("test12");
+
+        map.put("list",list);
+
+
+
+
+        return map;
+    }
+
+    /**
+     * <pre>
      * 1. 메소드명 : deleteMemberList
      * 2. 작성일 : 2020. 6. 13. 오전 12:52:27
      * 3. 작성자 : 정훈
@@ -123,7 +164,7 @@ public class MemberManagementContoller {
         /* 성별 코드 */
         commonDetailCodeVO.setCodeId("MEM003");
         List<CommonDetailCodeVO> listMEM003 = commonDetailCodeService.selectCommonDetailCodeList(commonDetailCodeVO);
-        model.addAttribute("listMEM003", listMEM001);
+        model.addAttribute("listMEM003", listMEM003);
 
         return "demo1.biz.member.insertMember";
 

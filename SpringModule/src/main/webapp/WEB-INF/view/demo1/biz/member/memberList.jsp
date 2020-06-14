@@ -31,9 +31,9 @@
                     </select>
                     <select name="memberStatusCode" id="sbscrbSttus" style="float: right; margin-left: 1px" >
                         <option value="" >가입상태(전체)</option>
-                        <option value="A01" <c:if test="${searchInfo.memberStatusCode == 'A01'}">selected</c:if> >신청</option>
-                        <option value="A03" <c:if test="${searchInfo.memberStatusCode == 'A03'}">selected</c:if> >삭제</option>
-                        <option value="A02" <c:if test="${searchInfo.memberStatusCode == 'A02'}">selected</c:if> >승인</option>
+                        <option value="MEM00101" <c:if test="${searchInfo.memberStatusCode == 'MEM00101'}">selected</c:if> >신청</option>
+                        <option value="MEM00103" <c:if test="${searchInfo.memberStatusCode == 'MEM00103'}">selected</c:if> >삭제</option>
+                        <option value="MEM00102" <c:if test="${searchInfo.memberStatusCode == 'MEM00102'}">selected</c:if> >승인</option>
                     </select>
                 </div>
             </div>
