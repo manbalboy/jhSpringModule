@@ -131,7 +131,6 @@ hiyogils@gmail.com
  // 이벤트 리스너 등록
  document.addEventListener('keydown', function(event) {
      if (event.target.dataset.maxbyte ) { // 속성이 존재할 경우
-     console.log(calByte.cutByteLength( event.target.value, event.target.dataset.maxbyte ))
          event.target.value = calByte.cutByteLength( event.target.value, Number(event.target.dataset.maxbyte) )
      };
  });

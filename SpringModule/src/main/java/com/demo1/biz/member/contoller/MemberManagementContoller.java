@@ -1,7 +1,5 @@
 package com.demo1.biz.member.contoller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,6 +21,7 @@ import com.demo1.biz.code.service.CommonDetailCodeService;
 import com.demo1.biz.code.vo.CommonDetailCodeVO;
 import com.demo1.biz.member.service.MemberManagementService;
 import com.demo1.biz.member.vo.MemberManagementVO;
+import com.util.CamelMap;
 
 /**
  * 회원관리 컨트롤러
@@ -77,38 +77,38 @@ public class MemberManagementContoller {
         return "demo1.biz.member.memberList";
     }
 
+
     /**
      * <pre>
-     * 1. 메소드명 : viewMemberList
-     * 2. 작성일 : 2020. 6. 13. 오전 12:51:50
+     * 1. 메소드명 : checkIdAjax
+     * 2. 작성일 : 2020. 6. 14. 오후 7:34:53
      * 3. 작성자 : 정훈
-     * 4. 설명 : 멤버리스트 조회
+     * 4. 설명 : Ajax 호출로 중복 ID 를 체크한다.
      * </pre>
-     * @param memberManagementVO
-     * @param bindingResult
+     * @param request
+     * @param response
      * @param model
-     * @return
+     * @return resultStatus - > 중복이 있으면 Y 없으면 N
      * @throws Exception
      */
-    @RequestMapping(value = "/viewMemberList2")
+    @RequestMapping(value = "/checkIdAjax")
     @ResponseBody
-    public Map viewMemberList2(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-        Map map = new HashMap();
-        map.put("test", "test");
+    public Map checkIdAjax(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 
-        List list = new ArrayList();
+        CamelMap convertMap = new CamelMap();
+        Map paramMap = convertMap.setMap(request);
+        Map reMap = new HashedMap();
 
-
-        list.add("test");
-        list.add("test1");
-        list.add("test12");
-
-        map.put("list",list);
+        reMap = memberManagementService.selectMemberIdCheck(paramMap);
 
 
+        if(  Integer.parseInt(reMap.get("cnt").toString()) > 0) {
+            reMap.put("result", "Y");
+        } else {
+            reMap.put("result", "N");
+        }
 
-
-        return map;
+        return reMap;
     }
 
     /**

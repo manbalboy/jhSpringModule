@@ -61,7 +61,7 @@
                             <tr>
                                 <th>일반회원아이디 *</th>
                                 <td>
-                                    <input type="text" name="memberId" disabled="disabled" style="width: 80%;"/>
+                                    <input type="text" name="memberId" disabled="disabled" style="width: 80%;" data-maxbyte="20"/>
                                     <button type="button" onclick="fn_showIdChk('modalIdChk')">중복아이디 검사</button>
                                 </td>
                             </tr>
@@ -180,20 +180,19 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <br>
-                        <span>사용할 아이디  :  </span> <input name="tmpId" type="text" />
+                        <span>사용할 아이디  :  </span> <input name="chkId" type="text" data-maxbyte="20"/>
                         <br>
-                        <span>결과  :  </span> <span>중복확인을 실행하십시오.</span>
+                        <span>결과  :  </span> <span name="chkIdResult">중복확인을 실행하십시오.</span>
                     </div>
                 </div>
             </div>
         </div>
         <hr>
-        <button type="button" onClick="fn_selectIdCheck();"><span class="pop_bt modalCloseBtn" style="font-size: 13pt;">확인</span></button>
-        <button type="button" onClick="fn_searchIdCheck();"><span class="pop_bt modalCloseBtn" style="font-size: 13pt;">조회</span></button>
+        <button type="button" onClick="fn_searchIdCheck('selectIdCheck');"><span class="pop_bt modalCloseBtn" style="font-size: 13pt;">확인</span></button>
+        <button type="button" onClick="fn_searchIdCheck('searchIdCheck');"><span class="pop_bt modalCloseBtn" style="font-size: 13pt;">조회</span></button>
         <button type="button" onClick="fn_closeModal('modalIdChk');"><span class="pop_bt modalCloseBtn" style="font-size: 13pt;">닫기</span></button>
     </div>
 </div>
-
 
 <script type="text/javascript">
 
@@ -221,25 +220,52 @@ function fn_closeModal(sObjId) {
 };
 
 //선택 ID 모달창의 값을 화면으로 보내줌
-function fn_selectIdCheck () {
 
-}
 
 //사용 할 수 있는 ID 인지 조회한다.
-function fn_searchIdCheck () {
+function fn_searchIdCheck (sId) {
+    // 빈값입력시
+    if(jhUtil.isEmpty(document.querySelector("[name=chkId]").value)) {
+        document.querySelector("[name=chkId]").focus();
+        document.querySelector("[name=chkIdResult]").style.color = "red";
+        document.querySelector("[name=chkIdResult]").innerHTML = "사용할 ID를 입력해주세요.";
+
+        return false;
+    };
+
     jhUtil.callAjax({
-        sId  : "searchIdCheck",
+        sId  : sId,
+        data : {memberId : document.querySelector("[name=chkId]").value},
         type : "POST",
-        url  : "${pageContext.request.contextPath}/member/management/viewMemberList2",
+        url  : "${pageContext.request.contextPath}/member/management/checkIdAjax",
         dataType : "json",
         contentType: "application/json;",
-        callBackFunction : fn_test
+        callBackFunction : fn_callBack
     });
-
 };
 
-function fn_test(reData, sId) {
-    console.log(reData, sId);
+//콜백 함수
+function fn_callBack(reData, sId) {
+
+    switch(sId) {
+    // Id check
+    case "searchIdCheck" :
+    case "selectIdCheck" :
+        if(reData.result == "Y") {
+            document.querySelector("[name=chkIdResult]").style.color = "red";
+            document.querySelector("[name=chkIdResult]").innerHTML = "ID가 중복 되었습니다. 다시 확인하세요";
+        } else {
+            document.querySelector("[name=chkIdResult]").style.color = "blue";
+            document.querySelector("[name=chkIdResult]").innerHTML = "사용가능한 ID 입니다.";
+        }
+        break;
+    }
+
+    //선택 ID 모달창의 값을 화면으로 보내줌
+    if(sId === "selectIdCheck"){
+        document.querySelector("[name=memberId]").value= document.querySelector("[name=chkId]").value;
+        fn_closeModal('modalIdChk');
+    }
 };
 
 

@@ -1,6 +1,7 @@
 package com.demo1.biz.member.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.demo1.biz.member.vo.MemberManagementVO;
 
@@ -16,4 +17,5 @@ import com.demo1.biz.member.vo.MemberManagementVO;
 public interface MemberManagementService {
     public List<MemberManagementVO> selectMemberList(MemberManagementVO memberManagementVO) throws Exception;
     public int deleteMemberList(String checkedIdForDel) throws Exception;
+    public Map selectMemberIdCheck(Map paramMap) throws Exception;
 }

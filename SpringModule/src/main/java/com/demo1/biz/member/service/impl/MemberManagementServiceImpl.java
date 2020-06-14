@@ -1,6 +1,7 @@
 package com.demo1.biz.member.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,12 @@ public class MemberManagementServiceImpl implements MemberManagementService{
         }
 
         return deleteCount;
+    }
+
+    @Override
+    public Map selectMemberIdCheck(Map paramMap) throws Exception {
+        Map map = memberManagementDAO.selectMemberIdCheck(paramMap);
+        return map;
     }
 
 
