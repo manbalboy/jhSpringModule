@@ -14,6 +14,7 @@ import com.demo1.biz.member.vo.MemberManagementVO;
  * 4. 설명 : 회원관리 서비스
  * </pre>
  */
+
 public interface MemberManagementService {
     public List<MemberManagementVO> selectMemberList(MemberManagementVO memberManagementVO) throws Exception;
     public int deleteMemberList(String checkedIdForDel) throws Exception;

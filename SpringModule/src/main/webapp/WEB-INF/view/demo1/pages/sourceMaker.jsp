@@ -3,41 +3,46 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page import="java.util.*, java.sql.*"%>
-<%
 
-    //String id = "zindev";
-    //String pw = "zindev12";
-    //String url = "jdbc:oracle:thin:@192.168.1.105:1521:XE";
-    //String sql = "";
-
-    String id = "hr";
-    String pw = "hr";
-    String url = "jdbc:oracle:thin:@java-coder.co.kr:18903:orcl";
-    String sql = "";
-
-    Connection con = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-
-    System.out.println("111");
-
-    try {
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        System.out.println("id:"+id+", pw: "+pw);
-        con = DriverManager.getConnection(url,id,pw);
-
-        //sql = "SELECT T1.TABLE_NAME, T1.NUM_ROWS, T2.COMMENTS FROM USER_TABLES T1 INNER JOIN USER_TAB_COMMENTS T2 ON T1.TABLE_NAME = T2.TABLE_NAME AND T1.TABLE_LOCK = 'ENABLED'";
-        sql = "SELECT T1.TABLE_NAME FROM USER_TABLES T1 WHERE 1=1 AND T1.TABLE_LOCK = 'ENABLED'";
-
-        pstmt = con.prepareStatement(sql);
-        rs = pstmt.executeQuery();
-
-%>
-
-
- <div class="container-fluid">
-    <h1>@ 표시가 붙은 항목은 사용자가 직접 수정해야 하는 부분입니다.</h1>
+<div class="container-fluid">
+    <h5>@ 표시가 붙은 항목은 사용자가 직접 수정해야 하는 부분입니다.</h5>
 <form name="frmMain" method=post onSubmit="tblGen();">
+<div>
+
+</div>
+<table border=1 cellspecing=0 style="margin-bottom: 2px" name="dbTable">
+    <colgroup>
+        <col style="width: 5%;">
+        <col style="width: 18%;">
+        <col style="width: 5%;">
+        <col style="width: 18%;">
+        <col style="width: 5%;">
+        <col style="width: 18%;">
+        <col style="width: 5%;">
+        <col style="width: 18%;">
+        <col style="width: ;">
+    </colgroup>
+    <tr>
+        <td>@ ID </td>
+        <td><input type="text" name="dbId" value="hr" style="width: 100%"/></td>
+        <td>@ PW</td>
+        <td><input type="text" name="dbPw" value="hr" style="width: 100%"/></td>
+        <td>@ URL</td>
+        <td><input type="text" name="dbURL" value="jdbc:oracle:thin:@java-coder.co.kr:18903:orcl" style="width: 100%"/></td>
+        <td>@ DB TYPE</td>
+        <td>
+            <select name="className"style="width:100%" >
+                <option value="oracle.jdbc.driver.OracleDriver">
+                 ORACLE
+                </option>
+            </select>
+        </td>
+        <td><button type="button" onClick="fn_dbConnect()">전송</button></td>
+    </tr>
+</table>
+
+
+
 <table border=1 cellspecing=0>
     <tr>
     <td align="right">@설치위치</td>
@@ -50,21 +55,16 @@
         <td align="right">@테이블명</td>
         <td align="left">
             <select name="tableName" style="width:300;" onChange="javascript:tblGen();">
-            <%
-                while (rs.next()) {
-            %>
-                <option value="<%=rs.getString("TABLE_NAME")%>"><%=rs.getString("TABLE_NAME")%></option>
-            <%
-                };
-            %>
+
             </select>
         </td>
         <td align="right">@선택</td>
         <td align="left">
             <select name="selectType" style="width:100;" onChange="javascript:tblGen();">
-                <option value="interface">interface</option>
+                <option value="interface">service</option>
                 <option value="Impl">Impl</option>
                 <option value="saveMaps">mapper</option>
+                <option value="html">html</option>
                 <!-- <option value="saveMaps">저장용maps</option> -->
                 <!-- <option value="selcetMaps">조회용maps</option> -->
             </select>
@@ -104,10 +104,6 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        console.log("정훈의 테스트11 ");
-    });
-
     function tblGen() {
         var classNm = document.frmMain.classNm.value;
         var devNm = document.frmMain.devnm.value;
@@ -166,20 +162,57 @@
 
 
 
+    function fn_dbConnect () {
+        //dbTable 정보
+        const OBJECTS = document.querySelectorAll('[name=dbTable] tr > td > input, [name=dbTable] tr > td > select');
+
+        let oAjaxData =  {};
+
+        // 이클립스가 뉴피쳐 못받아드려서 오류현상일어남
+        for(let oObj of OBJECTS) {
+            let key = oObj.name
+
+            oAjaxData[key] = oObj.value
+
+            if(jhUtil.isEmpty(oObj.value)) {
+                alert("DATA를 입력하세요");
+                oObj.focus();
+                return false;
+            }
+        }
+
+
+        jhUtil.callAjax({
+            sId  : "dbConnect",
+            data : oAjaxData,
+            type : "POST",
+            url  : "${pageContext.request.contextPath}/sourceMaker/tableListAjax",
+            dataType : "json",
+            contentType: "application/json;",
+            callBackFunction : fn_callBack
+        });
+
+        console.log(oAjaxData);
+    };
+
+
+    function fn_callBack(data, sId){
+        switch(sId) {
+        case "dbConnect" :
+            let list =  data.tableList;
+//             //초기화
+            document.querySelector('[name=tableName]').innerHTML = "";
+            let sHTML = "";
+
+            for(let row of list) {
+                sHTML += "<option value='"+row.tableName+"'>"+ row.tableName +"</option>";
+            }
+
+            console.log(sHTML);
+            document.querySelector('[name=tableName]').innerHTML = sHTML;
+            break;
+        }
+        console.log(data, sId);
+    };
 </script>
-<%
 
-    } catch (Exception e) {
-        System.out.println(e);
-        e.printStackTrace();
-    } finally {
-        System.out.println("finally");
-        try {rs.close();} catch(Exception e) {}
-        System.out.println("rs.close");
-        try {pstmt.close();} catch(Exception e) {}
-        System.out.println("pstmt.close()");
-        con.close();
-        System.out.println("con.close()");
-    }
-
-%>

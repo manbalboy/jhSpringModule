@@ -11,9 +11,9 @@
     ResultSet rs = null;
 
 
-    String id = "hr";
-    String pw = "hr";
-    String url = "jdbc:oracle:thin:@java-coder.co.kr:18903:orcl";
+    String id = request.getParameter("dbId");
+    String pw = request.getParameter("dbPw");
+    String url = request.getParameter("dbURL");
     String sql = "";
 
     int cntKey = 0; // PRIMARY KEY의 갯수늘리기
@@ -40,7 +40,7 @@
 
     String devnm = request.getParameter("devnm");	//작성자
     devnm = new String(devnm.getBytes("8859_1"),"UTF-8");
-    String jobnm = null;	//업무명한글
+    String tableNameComment = null;	//업무명한글
 
     String commonBox = request.getParameter("commonBox");
     String basicClassPath = request.getParameter("basicClassPath");
@@ -84,7 +84,7 @@
     }
 
     try {
-        Class.forName("oracle.jdbc.driver.OracleDriver");
+        Class.forName(request.getParameter("className"));
         con = DriverManager.getConnection(url,id,pw);
 
         int millisPerHour = 60 * 60 * 1000;
@@ -95,7 +95,9 @@
 
         fmt.setTimeZone(timeZone);
         String sTimeStr = fmt.format(new Date(System.currentTimeMillis()));
-        sql = "SELECT T2.COMMENTS AS DESCRIPTION FROM USER_TAB_COMMENTS T2 WHERE 1=1 AND T2.TABLE_NAME = ?";
+        sql = "SELECT COMMENTS AS DESCRIPTION ";
+        sql +="  FROM USER_TAB_COMMENTS ";
+        sql +=" WHERE 1=1 AND TABLE_NAME = ? ";
 
         pstmt = con.prepareStatement(sql);
         pstmt.setString(1, tableName);
@@ -103,7 +105,7 @@
 
         rs.next();
 
-        jobnm = rs.getString("DESCRIPTION");
+        tableNameComment = rs.getString("DESCRIPTION");
 
         try {rs.close();} catch(Exception e) {}
 
@@ -130,10 +132,9 @@
             out.println("");
             out.println("import java.util.HashMap;");
             out.println("import java.util.List;");
-            out.println("import "+commonBox+";");
             out.println("");
             out.println("/**");
-            out.println(" * "+jobnm+" 인터페이스");
+            out.println(" * "+tableNameComment+" 인터페이스");
             out.println(" * <p>");
             out.println(" * <수정이력> <br />");
             out.println(" * 1. 수정일: 수정자: 수정사유: <br />");
@@ -145,47 +146,52 @@
             out.println("public interface "+classNm+"Service {");
             out.println("");
             out.println("    /**");
-            out.println("     * "+jobnm+" 조회");
+            out.println("     * "+tableNameComment+" 조회");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @param commMap");
+            out.println("     * @param");
             out.println("     * @return");
             out.println("     * @throws Exception ");
+            out.println("     * @discription ");
             out.println("     */");
-            out.println("    public CommMap select"+strTableLower+"(CommMap commMap) throws Exception;");
+            out.println("    public Map select"+strTableLower+"(Map paramMap) throws Exception;");
             out.println("");
             out.println("    /**");
-            out.println("     * "+jobnm+" 상세");
+            out.println("     * "+tableNameComment+" 상세");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @param commMap");
+            out.println("     * @param");
             out.println("     * @return");
             out.println("     * @throws Exception ");
+            out.println("     * @discription ");
             out.println("     */");
-            out.println("    public CommMap selectDetail"+strTableLower+"(CommMap commMap) throws Exception;");
+            out.println("    public Map selectDetail"+strTableLower+"(Map paramMap) throws Exception;");
             out.println("");
             out.println("    /**");
-            out.println("     * "+jobnm+" 등록");
+            out.println("     * "+tableNameComment+" 등록");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @param commMap");
+            out.println("     * @param");
             out.println("     * @return");
             out.println("     * @throws Exception ");
+            out.println("     * @discription ");
             out.println("     */");
-            out.println("    public int insert"+strTableLower+"(CommMap commMap) throws Exception;");
+            out.println("    public int insert"+strTableLower+"(Map paramMap) throws Exception;");
             out.println("");
             out.println("    /**");
-            out.println("     * "+jobnm+" 수정");
+            out.println("     * "+tableNameComment+" 수정");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @param commMap");
+            out.println("     * @param");
             out.println("     * @throws Exception ");
+            out.println("     * @discription ");
             out.println("     */");
-            out.println("    public int update"+strTableLower+"(CommMap commMap) throws Exception;");
+            out.println("    public int update"+strTableLower+"(Map paramMap) throws Exception;");
             out.println("");
             out.println("    /**");
-            out.println("     * "+jobnm+" 삭제");
+            out.println("     * "+tableNameComment+" 삭제");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @param commMap");
+            out.println("     * @param");
             out.println("     * @throws Exception ");
+            out.println("     * @discription ");
             out.println("     */");
-            out.println("    public CommMap delete"+strTableLower+"(CommMap commMap) throws Exception;");
+            out.println("    public Map delete"+strTableLower+"(Map paramMap) throws Exception;");
             out.println("}");
         }
         else if(selectType.equals("Impl")){
@@ -205,6 +211,9 @@
             cnt = 0;
             strQuery = "";
             strTableLower = getInitCap(rs.getString("TABLE_LOWER"));
+
+            String strTableCamel = strTableLower.substring(0, 1).toLowerCase() + strTableLower.substring(1);
+
             strTableNameLower = rs.getString("TABLE_NAME_LOWER");
 
             out.println("package "+basicClassPath+"."+classPath+".service.impl;");
@@ -216,15 +225,11 @@
             out.println("import org.slf4j.LoggerFactory;");
             out.println("import org.springframework.stereotype.Service;");
             out.println("");
-            out.println("import marketingMgr.cmmn.constant.CommConstants;");
-            out.println("import marketingMgr.cmmn.dataaccess.CommDAO;");
-            out.println("import marketingMgr.cmmn.annotation.Paging;");
-            out.println("import marketingMgr.cmmn.exception.CommException;");
             out.println("import "+commonBox+";");
-            out.println("import "+basicClassPath+"."+classPath+".service."+classNm+"Service;");
+            out.println("import "+basicClassPath+"."+classPath+".service."+strTableLower+"Service;");
             out.println("");
             out.println("/** ");
-            out.println(" * "+jobnm+" 인터페이스 구현");
+            out.println(" * "+tableNameComment+" 인터페이스 구현");
             out.println(" * <p>");
             out.println(" * <수정이력> <br />");
             out.println(" * 1. 수정일: 수정자: 수정사유: <br />");
@@ -233,31 +238,27 @@
             out.println(" * @version 1.0");
             out.println(" * @author "+devnm);
             out.println(" */");
-            out.println("@Service(\""+classNm.substring(0,1).toLowerCase()+classNm.substring(1,classNm.length())+"Service"+"\")");
-            out.println("public class "+classNm+"ServiceImpl implements "+classNm+"Service{");
+            out.println("@Service(\""+strTableCamel+"Service"+"\")");
+            out.println("public class "+strTableLower+"ServiceImpl implements "+strTableLower+"Service{");
             out.println("");
             out.println("     private static final Logger logger = LoggerFactory.getLogger("+classNm+"ServiceImpl.class);");
             out.println("");
-            out.println("     @Resource(name=\""+"commDAO"+"\")");
-            out.println("     private CommDAO commDao;");
-            out.println("");
             out.println("    /*");
-            out.println("     * "+jobnm+" 조회");
+            out.println("     * "+tableNameComment+" 조회");
             out.println("     * @since "+sTimeStr);
-            out.println("     * @see "+basicClassPath+"."+classPath+".domain."+classNm+"Service#select"+strTableLower+"("+commonBox+")");
-            out.println("     * @param commMap");
+            out.println("     * @param map");
             out.println("     * @return");
             out.println("     * @throws Exception");
             out.println("     */");
-            out.println("    public CommMap select"+strTableLower+"(CommMap commMap)throws Exception {");
+            out.println("    public Map select"+strTableLower+"(Map paramMap)throws Exception {");
             out.println("");
-            out.println("        CommMap cmapReturn = new CommMap();");
+            out.println("        Map cmapReturn = new Map();");
             out.println("        cmapReturn.put(\"resultCd\", CommConstants.SUCCESS_CODE);");
             out.println("");
             out.println("        //전체 카운트");
-            out.println("        int iListTotCnt = (int) commDao.selectByPk(\""+classPath + "."+strTableNameLower+".select_"+strTableNameLower+"_cnt\", commMap);");
+            out.println("        int iListTotCnt = (int) commDao.selectByPk(\""+classPath + "."+strTableNameLower+".select_"+strTableNameLower+"_cnt\", paramMap);");
             out.println("");
-            out.println("        List<CommMap> listResult = commDao.selectList(\""+classPath + "."+strTableNameLower+".select_"+strTableNameLower+"\", commMap);");
+            out.println("        List<Map> listResult = commDao.selectList(\""+classPath + "."+strTableNameLower+".select_"+strTableNameLower+"\", paramMap);");
             out.println("");
             out.println("        cmapReturn.put(\"listResult\", listResult);");
             out.println("");
@@ -265,54 +266,54 @@
             out.println("    }");
             out.println("");
             out.println("    /*");
-            out.println("     * "+jobnm+" 상세.");
+            out.println("     * "+tableNameComment+" 상세.");
             out.println("     * @since "+sTimeStr);
             out.println("     * @see "+basicClassPath+"."+classPath+".domain."+classNm+"Service#selectDetail"+strTableLower+"("+commonBox+")");
-            out.println("     * @param commMap");
+            out.println("     * @param paramMap");
             out.println("     * @return");
             out.println("     * @throws Exception");
             out.println("     */");
-            out.println("    public CommMap selectDetail"+strTableLower+"(CommMap commMap)throws Exception {");
-            out.println("        return commDao.selectByCommMap(\""+classPath + "."+strTableNameLower+".select_detail_"+strTableNameLower+"\", commMap);");
+            out.println("    public Map selectDetail"+strTableLower+"(Map paramMap)throws Exception {");
+            out.println("        return commDao.selectByMap(\""+classPath + "."+strTableNameLower+".select_detail_"+strTableNameLower+"\", paramMap);");
             out.println("    }");
             out.println("");
             out.println("    /*");
-            out.println("     * "+jobnm+" 등록.");
+            out.println("     * "+tableNameComment+" 등록.");
             out.println("     * @since "+sTimeStr);
             out.println("     * @see "+basicClassPath+"."+classPath+".domain."+classNm+"Service#insert"+strTableLower+"("+commonBox+")");
-            out.println("     * @param commMap");
+            out.println("     * @param paramMap");
             out.println("     * @return	");
             out.println("     * @throws Exception");
             out.println("     */");
-            out.println("    public int insert"+strTableLower+"(CommMap commMap) throws Exception {");
-            out.println("        return commDao.insert(\""+classPath + "."+strTableNameLower+".insert_"+strTableNameLower+"\", commMap);");
+            out.println("    public int insert"+strTableLower+"(Map paramMap) throws Exception {");
+            out.println("        return commDao.insert(\""+classPath + "."+strTableNameLower+".insert_"+strTableNameLower+"\", paramMap);");
             out.println("    }");
             out.println("");
             out.println("    /* ");
-            out.println("     * "+jobnm+" 수정.");
+            out.println("     * "+tableNameComment+" 수정.");
             out.println("     * @since "+sTimeStr);
             out.println("     * @see "+basicClassPath+"."+classPath+".domain."+strTableLower+"Service#update"+strTableLower+"("+commonBox+")");
-            out.println("     * @param commMap");
+            out.println("     * @param paramMap");
             out.println("     * @throws Exception");
             out.println("     */");
-            out.println("    public int update"+strTableLower+"(CommMap commMap) throws Exception {");
-            out.println("        return commDao.update(\""+classPath + "."+strTableNameLower+".update_"+strTableNameLower+"\", commMap);");
+            out.println("    public int update"+strTableLower+"(Map paramMap) throws Exception {");
+            out.println("        return commDao.update(\""+classPath + "."+strTableNameLower+".update_"+strTableNameLower+"\", paramMap);");
             out.println("    }");
             out.println("");
             out.println("    /*");
-            out.println("     * "+jobnm+" 삭제.");
+            out.println("     * "+tableNameComment+" 삭제.");
             out.println("     * @since "+sTimeStr);
             out.println("     * @see "+basicClassPath+"."+classPath+".domain."+strTableLower+"Service#delete"+strTableLower+"("+commonBox+")");
-            out.println("     * @param commMap");
+            out.println("     * @param paramMap");
             out.println("     * @throws Exception");
             out.println("     */");
-            out.println("    public CommMap delete"+strTableLower+"(CommMap commMap) throws Exception {");
+            out.println("    public Map delete"+strTableLower+"(Map paramMap) throws Exception {");
             out.println("");
-            out.println("        CommMap cmapReturn = new CommMap();");
+            out.println("        Map cmapReturn = new Map();");
             out.println("");
             out.println("        cmapReturn.put(\"resultCd\", CommConstants.SUCCESS_CODE);");
             out.println("");
-            out.println("        commDao.delete(\""+classPath + "."+strTableNameLower+".delete_"+strTableNameLower+"\", commMap);");
+            out.println("        commDao.delete(\""+classPath + "."+strTableNameLower+".delete_"+strTableNameLower+"\", paramMap);");
             out.println("");
             out.println("        return cmapReturn;");
             out.println("    }");
@@ -376,10 +377,10 @@
                 /* 등록 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 등록							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 등록							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <insert id=\"insert_"+strTableNameLower+"\" parameterType=\"commMap\">");
+                out.println("    <insert id=\"insert_"+strTableNameLower+"\" parameterType=\"paramMap\">");
                 out.println("    /* " + classPath + "." + strTableNameLower + "." + "insert_" + strTableNameLower + " */");
 
 
@@ -490,10 +491,10 @@
                 /* 수정 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 수정							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 수정							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <update id=\"update_"+strTableNameLower+"\" parameterType=\"commMap\">");
+                out.println("    <update id=\"update_"+strTableNameLower+"\" parameterType=\"paramMap\">");
                 out.println("    /* " + classPath + "." + strTableNameLower + "." + "update_" + strTableNameLower + " */");
 
                 do {
@@ -566,10 +567,10 @@
                 /* 삭제 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 삭제							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 삭제							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <delete id=\"delete_"+strTableNameLower+"\" parameterType=\"commMap\">");
+                out.println("    <delete id=\"delete_"+strTableNameLower+"\" parameterType=\"paramMap\">");
                 out.println("    /* " + classPath + "." + strTableNameLower + "." + "delete_" + strTableNameLower + " */");
 
                 out.println("        DELETE FROM " + strTableName);
@@ -635,10 +636,10 @@
                 /* 조회 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 조회							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 조회							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <select id=\"select_"+strTableLower+"\" parameterType=\"commMap\" resultType=\"commMap\">");
+                out.println("    <select id=\"select_"+strTableLower+"\" parameterType=\"paramMap\" resultType=\"paramMap\">");
                 out.println("    /* " + classPath+ "." + strTableNameLower + "." + "select_"+strTableLower + " */");
 
                 do {
@@ -669,10 +670,10 @@
                 /* 갯수 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 총수							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 총수							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <select id=\"select_"+strTableLower+"_cnt\" parameterType=\"commMap\" resultType=\"int\">");
+                out.println("    <select id=\"select_"+strTableLower+"_cnt\" parameterType=\"paramMap\" resultType=\"int\">");
                 out.println("    /* " + classPath+ "." + strTableNameLower + "." + "select_"+strTableLower  +"_cnt" + " */");
 
                 out.println("        SELECT COUNT(1) CNT");
@@ -685,10 +686,10 @@
                 /* 상세조회 */
                 out.println("    ");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <!-- 업무내용 : " + jobnm + " 상세조회							-->");
+                out.println("    <!-- 업무내용 : " + tableNameComment + " 상세조회							-->");
                 out.println("    <!-- 작성자   : " + devnm + "								     -->");
                 out.println("    <!-- ================================================================================== -->");
-                out.println("    <select id=\"select_detail_"+strTableLower+"\" parameterType=\"commMap\" resultType=\"commMap\">");
+                out.println("    <select id=\"select_detail_"+strTableLower+"\" parameterType=\"paramMap\" resultType=\"paramMap\">");
                 out.println("    /* " + classPath+ "." + strTableNameLower + "." + "select_detail_"+strTableLower + " */");
 
                 do {
@@ -717,6 +718,58 @@
                 cnt = 0;
 
                 out.println("</mapper>");
+
+        } else if(selectType.equals("html")) {
+            sql ="SELECT COL "
+                +"     , LOWER(SUBSTR(REPLACE(INITCAP(COL),'_',''), 0, 1)) || SUBSTR(REPLACE(INITCAP(COL),'_',''), 2) AS CAMEL"
+                +"     , '#{' || LOWER(SUBSTR(REPLACE(INITCAP(COL),'_',''), 0, 1)) || SUBSTR(REPLACE(INITCAP(COL),'_',''), 2) ||'}' AS MYBATISFROM"
+                +"     , NULLABLE , DATA_TYPE , DATA_LENGTH  , TABLE_NAME  , TABLE_COMMENTS"
+                +"  FROM ( SELECT A.TABLE_NAME "
+                +"              , B.COMMENTS AS TABLE_COMMENTS "
+                +"              , A.COLUMN_ID AS COL_SEQ "
+                +"              , A.COLUMN_NAME AS COL "
+                +"              , C.COMMENTS AS COL_NAME "
+                +"              , A.DATA_TYPE || "
+                +"                               DECODE(A.DATA_TYPE, 'DATE', '', "
+                +"                                     DECODE(A.DATA_TYPE,'NUMBER', "
+                +"                                         DECODE(DATA_SCALE,0,'(' || DATA_PRECISION || ')','(' || "
+                +"                                         DATA_PRECISION || ',' || DATA_SCALE || ')'),'(' || DATA_LENGTH || ')') ) AS DATA_TYPE"
+                +"              , DECODE(A.DATA_TYPE, 'DATE', '', DECODE(A.DATA_TYPE,'NUMBER', A.DATA_PRECISION, DECODE(A.DATA_TYPE,'CLOB', '' ,DATA_LENGTH ))) AS DATA_LENGTH "
+                +"              , DECODE(A.NULLABLE,'Y','','required') AS NULLABLE "
+                +"              , D.COLUMN_POSITION "
+                +"              , A.DATA_DEFAULT "
+                +"        FROM USER_TAB_COLUMNS A, "
+                +"         USER_TAB_COMMENTS B, "
+                +"        USER_COL_COMMENTS C, "
+                +"        USER_IND_COLUMNS D "
+                +"        WHERE A.TABLE_NAME = B.TABLE_NAME "
+                +"        AND A.TABLE_NAME = C.TABLE_NAME "
+                +"        AND A.COLUMN_NAME = C.COLUMN_NAME "
+                +"        AND A.TABLE_NAME =D.TABLE_NAME(+) "
+                +"        AND A.COLUMN_NAME =D.COLUMN_NAME(+) "
+                +"        AND A.TABLE_NAME = ? "
+                +"         ORDER BY 1, 3 "
+                +"        )"
+                +"      ORDER BY COL_SEQ";
+
+
+                pstmt = con.prepareStatement(sql);
+                pstmt.setString(1, tableName);
+                rs = pstmt.executeQuery();
+                while (rs.next()) {
+                     out.println("<input type='text' name='" + rs.getString("CAMEL") +"'"
+                     + (rs.getString("DATA_LENGTH") == null ? "" : " data-maxbyte='"+ rs.getString("DATA_LENGTH") +"'")+ "/>");
+                     out.println("");
+                }
+
+
+                while (rs.next()) {
+                    out.println("<textarea type='text' name='" + rs.getString("CAMEL") +"'"
+                    + (rs.getString("DATA_LENGTH") == null ? "" : " data-maxbyte='"+ rs.getString("DATA_LENGTH") +"'")+ ">"
+                    +  rs.getString("MYBATISFROM")
+                    + "</textarea>");
+                    out.println("");
+               }
 
         }
 

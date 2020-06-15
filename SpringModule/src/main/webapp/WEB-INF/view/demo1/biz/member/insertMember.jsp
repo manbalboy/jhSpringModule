@@ -68,19 +68,19 @@
                             <tr>
                                 <th>일반회원이름 *</th>
                                 <td>
-                                    <input type="text" name="memberName" style="width: 80%;"/>
+                                    <input type="text" name="memberName" style="width: 80%;" data-maxbyte="50"//>
                                 </td>
                             </tr>
                             <tr>
                                 <th>비밀번호 *</th>
                                 <td>
-                                    <input type="password" name="password" style="width: 80%;"/>
+                                    <input type="password" name="password" style="width: 80%; ime-mode:disabled;" data-maxbyte="50" />
                                 </td>
                             </tr>
                             <tr>
                                 <th>비밀번호확인 *</th>
                                 <td>
-                                    <input type="password" name="passwordChk" style="width: 80%;"/>
+                                    <input type="password" name="passwordChk" style="width: 80%; ime-mode:disabled;" data-maxbyte="50"/>
                                 </td>
                             </tr>
                             <tr>
@@ -96,7 +96,7 @@
                             <tr>
                                 <th>비밀번호정답 *</th>
                                 <td>
-                                    <input type="text" name="passwordCnsrContents" style="width: 80%;"/>
+                                    <input type="text" name="passwordCnsrContents" style="width: 80%;" data-maxbyte="500"/>
                                 </td>
                             </tr>
                             <tr>
@@ -112,37 +112,37 @@
                             <tr>
                                 <th>휴대전화번호 *</th>
                                 <td>
-                                    <input type="text" name="mobilePhoneNumber" style="width: 100%;"/>
+                                    <input type="text" name="mobilePhoneNumber" style="width: 100%;" data-maxbyte="20"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>일반전화번호 *</th>
                                 <td>
-                                    <input type="text" name="phoneNumber" style="width: 100%;"/>
+                                    <input type="text" name="phoneNumber" style="width: 100%;" data-maxbyte="20"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>이메일주소 *</th>
                                 <td>
-                                    <input type="email" name="memberEmailAddress" style="width: 100%;"/>
+                                    <input type="email" name="memberEmailAddress" style="width: 100%;" data-maxbyte="60"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>우편번호 *</th>
                                 <td>
-                                    <input type="text" name="zipCode" style="width: 100%;"/>
+                                    <input type="text" name="zipCode" style="width: 100%;" data-maxbyte="6"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>주소 *</th>
                                 <td>
-                                    <input type="text" name="address" style="width: 100%;"/>
+                                    <input type="text" name="address" style="width: 100%;" data-maxbyte="100"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>상세주소 *</th>
                                 <td>
-                                    <input type="text" name="detailAddress" style="width: 100%;"/>
+                                    <input type="text" name="detailAddress" style="width: 100%;" data-maxbyte="100"/>
                                 </td>
                             </tr>
                              <tr>
@@ -155,11 +155,10 @@
                                     </select>
                                 </td>
                             </tr>
-
-
                         </tbody>
                     </table>
                     <div style="float: right;">
+<!--                         <button type="button" onClick="fn_test()">테스트</button> -->
                         <button type="button" onClick="fn_goMemberList()">목록</button>
                         <button type="button" >저장</button>
                     </div
@@ -203,6 +202,12 @@ document.addEventListener('keydown', function(event) {
     }
 }, true);
 
+// function fn_test (){
+//     let oObjs = document.querySelectorAll("[type=password]");
+//     for(let oObj of oObjs) {
+//         console.log(oObj.value);
+//     }
+// }
 
 // 회원 리스트로 이동
 function fn_goMemberList () {
@@ -270,9 +275,7 @@ function fn_callBack(reData, sId) {
 
 
 
+
+
+
 </script>
-
-
-
-
-
