@@ -62,6 +62,75 @@
 
 
 
+    <insert id="insertMember" parameterType="com.demo1.biz.member.vo.MemberManagementVO">
+
+     /* MemberManagementDAO_Mapper.insertMember */
+    INSERT
+      INTO TB_GENERAL_MEMBER (
+           MEMBER_ID
+         , PASSWORD
+         , PASSWORD_HINT_CONTENTS
+         , PASSWORD_CNSR_CONTENTS
+         , IHIDNUM
+         , MEMBER_NAME
+         , ZIP_CODE
+         , ADDRESS
+         , MEMBER_STATUS_CODE
+         , DETAIL_ADDRESS
+         , MOBILE_PHONE_NUMBER
+         , PHONE_NUMBER
+         , GROUP_ID
+         , MEMBER_EMAIL_ADDRESS
+         , SUBSCRIBE_DATE
+         , SEXDSTN_CODE
+         , LOCK_YN
+         , LOCK_COUNT
+         , LOCK_LAST_DATE
+         , REGISTRATION_DATE
+         , REGISTER_ID
+         , UPDATE_DATE
+         , UPDATE_USER_ID
+  ) VALUES (
+           #{memberId}                /* 회원ID */
+         , #{password}                /* 비밀번호 */
+         , #{passwordHintContents}    /* 비밀번호힌트내용 */
+         , #{passwordCnsrContents}    /* 비밀번호정답내용 */
+         , #{ihidnum}                 /* 주민등록번호 */
+         , #{memberName}              /* 회원이름 */
+         , #{zipCode}                 /* 우편번호 */
+         , #{address}                 /* 주소 */
+         , #{memberStatusCode}        /* 회원상태코드 */
+         , #{detailAddress}           /* 상세주소 */
+         , #{mobilePhoneNumber}       /* 휴대전화번호 */
+         , #{phoneNumber}             /* 전화번호 */
+         , #{groupId}                 /* 그룹ID */
+         , #{memberEmailAddress}      /* 회원이메일주소 */
+         , SYSDATE                    /* 가입일자 */
+         , #{sexdstnCode}             /* 성별코드 */
+         , #{lockYn}                  /* 잠금여부 */
+         , #{lockCount}               /* 잠금횟수 */
+         , #{lockLastDate}            /* 잠금최종일시 */
+         , SYSDATE                    /* 등록일시 */
+         , #{registerId}              /* 등록자ID */
+         , SYSDATE                    /* 수정일시 */
+         , #{updateUserId}            /* 수정자ID */
+    )
+    </insert>
+
+        <select id="selectMemberLogin" resultType="camelMap" parameterType="map">
+        /* com.demo1.biz.user.dao.UserDao.selectMemberLogin */
+        SELECT  MEMBER_ID
+              , PASSWORD
+          FROM TB_GENERAL_MEMBER
+         WHERE MEMBER_ID = #{memberId}
+
+<!--         <include refid="pagingOffset"/> -->
+    </select>
+
+
+
+
+
 
 
 

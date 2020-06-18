@@ -51,5 +51,10 @@ public class MemberManagementServiceImpl implements MemberManagementService{
         return map;
     }
 
+    @Override
+    public int insertMember(MemberManagementVO memberManagementVO) throws Exception {
+        return memberManagementDAO.insertMember(memberManagementVO);
+    }
+
 
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -44,6 +45,8 @@ public class MemberManagementContoller {
 
     @Resource(name = "commonDetailCodeServiceImpl")
     private CommonDetailCodeService commonDetailCodeService;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     /**
      * <pre>
@@ -167,6 +170,30 @@ public class MemberManagementContoller {
         model.addAttribute("listMEM003", listMEM003);
 
         return "demo1.biz.member.insertMember";
+    }
 
+
+        /**
+         *  일반회원 등록
+         * @since 2020. 6. 17.
+         * @param
+         * @return
+         * @throws Exception
+         * @discription
+         */
+    @RequestMapping(value = "/insertMember")
+    public String insertMember(@ModelAttribute MemberManagementVO memberManagementVO,BindingResult bindingResult ,Model model) throws Exception {
+         if(bindingResult.hasErrors()) {
+             System.out.println("<><<<<<<<<<<<<<<<<<<<>>>>>>>>>>");
+         }
+
+         System.out.println("암호화 되기전 : " + memberManagementVO.getPassword() );
+         memberManagementVO.setPassword(bCryptPasswordEncoder.encode(memberManagementVO.getPassword()));
+         System.out.println("암호화 된후 : " + memberManagementVO.getPassword() );
+
+         memberManagementService.insertMember(memberManagementVO);
+
+         model.addAttribute("resultMsg", "등록 성공");
+         return "forward:/member/management/viewMemberList";
     }
 }

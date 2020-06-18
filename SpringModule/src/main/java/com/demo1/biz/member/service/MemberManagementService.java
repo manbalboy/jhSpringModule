@@ -19,4 +19,5 @@ public interface MemberManagementService {
     public List<MemberManagementVO> selectMemberList(MemberManagementVO memberManagementVO) throws Exception;
     public int deleteMemberList(String checkedIdForDel) throws Exception;
     public Map selectMemberIdCheck(Map paramMap) throws Exception;
+    public int insertMember(MemberManagementVO memberManagementVO) throws Exception;
 }

@@ -16,7 +16,7 @@
         </if>
     </sql>
 
-    <select id="selectTbUserLogin" resultType="map" parameterType="map">
+    <select id="selectTbUserLogin" resultType="camelMap" parameterType="map">
         /* com.demo1.biz.user.dao.UserDao.selectTbUserLogin */
         SELECT USER_ID              /*사용자ID*/
              , USER_PASSWORD        /*사용자암호*/

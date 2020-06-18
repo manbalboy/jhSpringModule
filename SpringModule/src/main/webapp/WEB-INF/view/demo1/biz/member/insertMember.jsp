@@ -32,7 +32,7 @@
 
 
 
-<form name="listForm" action="/member/management/viewMemberList">
+<form name="saveForm" action="${pageContext.request.contextPath}/member/management/insertMember" >
     <input name="checkedIdForDel" type="hidden" />
     <div class="container-fluid">
 
@@ -61,26 +61,28 @@
                             <tr>
                                 <th>일반회원아이디 *</th>
                                 <td>
-                                    <input type="text" name="memberId" disabled="disabled" style="width: 80%;" data-maxbyte="20"/>
+                                    <input type="text" name="memberId" disabled="disabled" style="width: 80%;" data-maxbyte="20" data-valid='required'/>
                                     <button type="button" onclick="fn_showIdChk('modalIdChk')">중복아이디 검사</button>
                                 </td>
                             </tr>
                             <tr>
                                 <th>일반회원이름 *</th>
                                 <td>
-                                    <input type="text" name="memberName" style="width: 80%;" data-maxbyte="50"//>
+                                    <input type="text" name="memberName" style="width: 80%;" data-maxbyte="50" data-valid='required'/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>비밀번호 *</th>
                                 <td>
-                                    <input type="password" name="password" style="width: 80%; ime-mode:disabled;" data-maxbyte="50" />
+                                    <input type="password" name="password" style="width: 80%; ime-mode:disabled;" data-maxbyte="50" data-valid='required' />
+                                    <span data-target="password"  style="width: 20%;" ></span>
                                 </td>
                             </tr>
                             <tr>
                                 <th>비밀번호확인 *</th>
                                 <td>
                                     <input type="password" name="passwordChk" style="width: 80%; ime-mode:disabled;" data-maxbyte="50"/>
+                                    <span data-target="passwordChk"  style="width: 20%;" ></span>
                                 </td>
                             </tr>
                             <tr>
@@ -112,7 +114,7 @@
                             <tr>
                                 <th>휴대전화번호 *</th>
                                 <td>
-                                    <input type="text" name="mobilePhoneNumber" style="width: 100%;" data-maxbyte="20"/>
+                                    <input type="text" name="mobilePhoneNumber" style="width: 100%;" data-maxbyte="20" data-valid='required'/>
                                 </td>
                             </tr>
                             <tr>
@@ -124,7 +126,7 @@
                             <tr>
                                 <th>이메일주소 *</th>
                                 <td>
-                                    <input type="email" name="memberEmailAddress" style="width: 100%;" data-maxbyte="60"/>
+                                    <input type="email" name="memberEmailAddress" style="width: 100%;" data-maxbyte="60" data-valid='required'/>
                                 </td>
                             </tr>
                             <tr>
@@ -160,7 +162,7 @@
                     <div style="float: right;">
 <!--                         <button type="button" onClick="fn_test()">테스트</button> -->
                         <button type="button" onClick="fn_goMemberList()">목록</button>
-                        <button type="button" >저장</button>
+                        <button type="button" onClick="fn_save();">저장</button>
                     </div
                 </div>
             </div>
@@ -268,10 +270,115 @@ function fn_callBack(reData, sId) {
 
     //선택 ID 모달창의 값을 화면으로 보내줌
     if(sId === "selectIdCheck"){
-        document.querySelector("[name=memberId]").value= document.querySelector("[name=chkId]").value;
-        fn_closeModal('modalIdChk');
+        if(reData.result != "Y") {
+           document.querySelector("[name=memberId]").value= document.querySelector("[name=chkId]").value;
+           fn_closeModal('modalIdChk');
+        }
     }
 };
+
+
+//저장함수
+function fn_save () {
+
+
+    // 넘기기전에 memberId 변경
+    $("input[name=memberId]").attr("disabled", false);
+    document.saveForm.submit();
+}
+
+
+//2020/06/11 최조 작성중 오류가있는지 검증필요
+var valid = {
+    oObjs: []
+    , chk: function () {
+        //초기화
+        valid.oObjs = [];
+        var validDoms = document.querySelectorAll("input[data-valid] ,textarea[data-valid]");
+        for (let oDom of validDoms) {
+            let validType = oDom.dataset.valid.split("|");
+            //필수값
+            for (let type of validType) {
+                var oObj = {}
+                if (type === "required") {
+
+                    if (jhUtil.isEmpty(oDom.value)) {
+
+                        oObj.oObject = oDom;
+                        //원하는 값
+                        oObj.sMsg = oDom.dataset.validMsg || "필수값";
+
+                        valid.oObjs.push(oObj);
+                        oDom.placeholder = oObj.sMsg;
+                        oDom.classList.toggle('err', true);
+                    }
+                }
+                //number Chk
+                if (type === "number") {
+                    if (isNaN(Number(oDom.value))) {
+                        oObj.oObject = oDom;
+                        oObj.sMsg = isEmpty(oDom.value) ? "숫자만" : oObj.sMsg + ", 숫자만";
+
+                        //원하는 값
+                        oObj.sMsg = oDom.dataset.validMsg || oObj.sMsg;
+                        valid.oObjs.push(oObj);
+                    }
+                }
+            }
+            //오브젝트를 push 한다.
+            //처리하는 함수를 만들고 처리한다.
+        }
+
+        if (valid.oObjs.length == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    },
+
+}
+
+
+
+document.addEventListener('keydown', function (event) {
+
+    if(event.target.type === "password") {
+        fn_passwordChk(event);
+    };
+});
+document.addEventListener('keyup', function (event) {
+    if(event.target.type === "password") {
+        fn_passwordChk(event);
+    };
+});
+document.addEventListener('focusout', function (event) {
+    if(event.target.type === "password") {
+
+
+
+    };
+});
+
+
+
+function fn_passwordChk () {
+     document.querySelector('[data-target=password]').textContent = "";
+     document.querySelector('[data-target=passwordChk]').textContent =  "";
+     let pw = document.querySelector('[name=password]').value;
+     let pwChk = document.querySelector('[name=passwordChk]').value;
+
+
+     if(jhUtil.isEmpty(pw) || jhUtil.isEmpty(pwChk)) {
+
+     } else if(pw === pwChk){
+         document.querySelector('[data-target=password]').textContent = "비밀번호 일치함";
+         document.querySelector('[data-target=passwordChk]').textContent =  "비밀번호 일치함";
+     } else if(pw !== pwChk) {
+         document.querySelector('[data-target=password]').textContent = "비밀번호 일치하지 않음";
+         document.querySelector('[data-target=passwordChk]').textContent =  "비밀번호 일치하지 않음";
+     }
+}
 
 
 
