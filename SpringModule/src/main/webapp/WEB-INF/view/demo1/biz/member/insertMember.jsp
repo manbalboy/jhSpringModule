@@ -163,7 +163,7 @@
 <!--                         <button type="button" onClick="fn_test()">테스트</button> -->
                         <button type="button" onClick="fn_goMemberList()">목록</button>
                         <button type="button" onClick="fn_save();">저장</button>
-                    </div
+                    </div>
                 </div>
             </div>
         </div>
