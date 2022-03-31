@@ -9,7 +9,7 @@
     <name>SpringModule Maven Webapp</name>
 
     <properties>
-        <springframework.version>5.2.0.RELEASE</springframework.version>
+        <springframework.version>5.3.18</springframework.version>
         <security.version>5.3.2.RELEASE</security.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
